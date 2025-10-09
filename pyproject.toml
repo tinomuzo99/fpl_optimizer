@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fpl-optimizer"
+version = "0.1.0"
+description = "FPL squad optimiser with fixture-weighted horizon and transfers search"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name="Policy Innovation Lab"}]
+dependencies = [
+  "requests>=2.31",
+  "pandas>=2.1",
+  "tabulate>=0.9",
+  "pulp>=2.7"
+]
+
+[project.scripts]
+fpl = "fpl_optimizer.cli:main"

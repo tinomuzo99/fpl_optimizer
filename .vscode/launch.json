@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FPL: optimise",
+      "type": "python",
+      "request": "launch",
+      "module": "fpl_optimizer.cli",
+      "args": ["optimise", "--budget", "100", "--horizon", "4", "--allow-flagged", "--out-dir", "outputs"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "FPL: xi (from CSV)",
+      "type": "python",
+      "request": "launch",
+      "module": "fpl_optimizer.cli",
+      "args": ["xi", "--squad-file", "squad.csv", "--horizon", "4", "--out-dir", "outputs"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "FPL: transfers (from CSV)",
+      "type": "python",
+      "request": "launch",
+      "module": "fpl_optimizer.cli",
+      "args": ["transfers", "--squad-file", "squad.csv", "--bank", "0.5", "--horizon", "4", "--top-k", "12", "--out-dir", "outputs"],
+      "console": "integratedTerminal"
+    }
+  ]
+}
