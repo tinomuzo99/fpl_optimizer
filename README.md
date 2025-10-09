@@ -142,7 +142,7 @@ You can specify just names or include a team column to disambiguate players.
 **Example:**
 ```csv
 name,team
-Kelleher,Liverpool
+Kelleher,Brenford
 Raya,Arsenal
 Cucurella,Chelsea
 Gabriel,Arsenal
@@ -150,12 +150,12 @@ Keane,Everton
 Chalobah,Chelsea
 Van de Ven,Tottenham
 Semenyo,Bournemouth
-Mbeumo,Brentford
-Grealish,Manchester City
+Mbeumo,Manchester United
+Grealish,Everton
 McNeil,Everton
-Kevin,Manchester City
+Kevin,Fulham
 Haaland,Manchester City
-Chris Wood,Nottingham Forest
+Wood,Nottingham Forest
 Richarlison,Tottenham
 ```
 
