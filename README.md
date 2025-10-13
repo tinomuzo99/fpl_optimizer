@@ -241,7 +241,7 @@ outputs/
 
 ---
 
-## 🧠 Tips
+## Tips
 
 - Run both **next** and **horizon** optimisations to compare short-term vs long-term picks:
   ```powershell
