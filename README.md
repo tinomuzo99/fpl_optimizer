@@ -1,7 +1,7 @@
 # Fantasy Premier League Optimiser
 
 A **Python-based optimiser** for Fantasy Premier League (FPL) squads.  
-It builds an **optimal 15-player team**, recommends the **best starting XI**, and suggests **profitable single-transfer moves** — all using real-time FPL data from the public API.
+It builds an **optimal 15-player team**, recommends the **best starting XI**, and suggests **profitable single-transfer moves**, all using real-time FPL data from the public API.
 
 ---
 
