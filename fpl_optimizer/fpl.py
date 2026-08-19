@@ -16,6 +16,28 @@ def fetch_fixtures() -> pd.DataFrame:
     r.raise_for_status()
     return pd.DataFrame(r.json())
 
+def fetch_event_live(gameweek: int) -> dict:
+    """Fetch player statistics for one gameweek."""
+
+    if gameweek < 1:
+        raise ValueError(
+            "gameweek must be at least 1"
+        )
+
+    url = (
+        "https://fantasy.premierleague.com/api/"
+        f"event/{gameweek}/live/"
+    )
+
+    response = requests.get(
+        url,
+        timeout=30,
+    )
+
+    response.raise_for_status()
+
+    return response.json()
+
 def get_next_gw_and_window(bootstrap: dict, horizon: int) -> Tuple[int, List[int]]:
     events = pd.DataFrame(bootstrap["events"])
     if "is_next" in events.columns and events["is_next"].any():
@@ -25,6 +47,41 @@ def get_next_gw_and_window(bootstrap: dict, horizon: int) -> Tuple[int, List[int
         next_gw = int(unfinished.min()) if len(unfinished) else int(events["id"].max())
     window = list(range(next_gw, next_gw + horizon))
     return next_gw, window
+
+def get_season_label(
+    bootstrap: dict,
+) -> str:
+    """Return the season represented by a bootstrap payload."""
+
+    events = pd.DataFrame(
+        bootstrap["events"]
+    )
+
+    if "deadline_time" not in events.columns:
+        raise ValueError(
+            "FPL bootstrap events are missing deadline_time."
+        )
+
+    deadlines = pd.to_datetime(
+        events["deadline_time"],
+        utc=True,
+        errors="coerce",
+    )
+
+    if deadlines.dropna().empty:
+        raise ValueError(
+            "FPL bootstrap contains no valid "
+            "gameweek deadlines."
+        )
+
+    start_year = int(
+        deadlines.dropna().min().year
+    )
+
+    return (
+        f"{start_year}-"
+        f"{str(start_year + 1)[-2:]}"
+    )
 
 def build_player_table(bootstrap: dict, allow_flagged: bool = False, min_play_chance: Optional[int] = None) -> pd.DataFrame:
     elements = pd.DataFrame(bootstrap["elements"])

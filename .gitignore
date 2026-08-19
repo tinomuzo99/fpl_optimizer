@@ -8,3 +8,8 @@ __pycache__/
 dist/
 build/
 .ipynb_checkpoints/
+tracking/
+data/historical/
+backtests/results/
+outputs/
+outputs-*/
