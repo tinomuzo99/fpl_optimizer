@@ -37,29 +37,65 @@ def _best_match(pool_df: pd.DataFrame, name: str, team: str | None = None, min_r
         return None
 
 
-def map_names_to_pool(pool_df: pd.DataFrame, names_df: pd.DataFrame) -> pd.DataFrame:
+def map_names_to_pool(
+    pool_df: pd.DataFrame,
+    names_df: pd.DataFrame,
+) -> pd.DataFrame:
     """
-    Map squad CSV names (and optionally teams) to the FPL pool.
-    Accepts either:
-      - one column: 'name'
-      - or two columns: 'name', 'team'
+    Map squad CSV names and optional teams to the current FPL pool.
+
+    Every supplied player must be matched. The function raises an
+    error rather than returning an incomplete squad.
     """
-    if not {"name"}.issubset(names_df.columns):
-        raise ValueError("Squad CSV must include at least a 'name' column.")
+
+    if "name" not in names_df.columns:
+        raise ValueError(
+            "Squad CSV must include at least a 'name' column."
+        )
+
+    names_df = names_df.copy()
 
     if "team" not in names_df.columns:
-        names_df["team"] = None  # fill if missing
+        names_df["team"] = None
 
     matched_rows = []
+    unmatched = []
+
     for _, row in names_df.iterrows():
-        nm, tm = str(row["name"]).strip(), str(row["team"]).strip() if row["team"] else None
-        best = _best_match(pool_df, nm, tm)
-        if best is None:
-            print(f"[warn] Could not match: {nm}{' (' + tm + ')' if tm else ''}")
+        name = str(row["name"]).strip()
+
+        team = (
+            str(row["team"]).strip()
+            if row["team"]
+            else None
+        )
+
+        best_match = _best_match(
+            pool_df,
+            name,
+            team,
+        )
+
+        if best_match is None:
+            label = (
+                f"{name} ({team})"
+                if team
+                else name
+            )
+            unmatched.append(label)
             continue
-        matched_rows.append(best)
 
-    if not matched_rows:
-        raise ValueError("No valid player matches found from squad.csv — please check spelling or team names.")
+        matched_rows.append(best_match)
 
-    return pd.DataFrame(matched_rows).reset_index(drop=True)
+    if unmatched:
+        raise ValueError(
+            "Could not match all squad players against the "
+            "current FPL data: "
+            + ", ".join(unmatched)
+            + ". Update the names or teams in the squad file "
+              "and try again."
+        )
+
+    return pd.DataFrame(
+        matched_rows
+    ).reset_index(drop=True)
